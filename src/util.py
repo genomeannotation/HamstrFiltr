@@ -10,12 +10,11 @@ def process_args(args):
     else:
         return args[1], args[2], args[3]
 
-def read_genome(gfile):
-    pass
-
 def read_orthologs(ofile):
     pass
 
 def read_vcf(vfile):
     pass
 
+def update_gene_snp_count(gene, snps):
+    pass

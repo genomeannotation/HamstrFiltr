@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-from src.util import process_args, read_genome, read_orthologs, read_vcf
+from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_count
+from src.gene import Gene, read_genome
 
 def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)
@@ -14,7 +15,7 @@ def main():
 
     # Read in SNP info
     # TODO decide what exactly we need to store about SNPs;
-    #  I'm thinking just sequence and indices
+    #  I'm thinking just sequence and index
     print("Reading SNPs in file " + snpfile + "...")
     snps = read_vcf(snpfile)
 
@@ -41,14 +42,14 @@ def main():
     # For each exon, find out how many SNPs it contains
     # Could look like
     #    for gene in genes:
-    #        gene.update_snp_count(snps)
+    #        update_gene_snp_count(gene, snps)
 
     # Rank exons in descending order based on SNP count
     # There's some clever one-liner way to do this; ask me and I'll look it up
 
     # For the SNPpiest 200 exons, write output:
     # seq_id \t exon_start \t exon_end \t 'name'
-    # TODO idk what 'name' is supposed to be, maybe gene_name?
+    # TODO idk what 'name' is supposed to be, maybe gene_name, or exon_id?
 
 
 ###########################################
