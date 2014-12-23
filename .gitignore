@@ -1,0 +1,5 @@
+*.pyc
+*__init__*
+data/HawaiiWChinaTaiwan.eff.vcf
+data/bdor_genome.gff
+data/hamstrsearch_genome_insecta_da_hmmer3.out
