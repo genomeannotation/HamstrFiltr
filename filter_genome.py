@@ -49,8 +49,8 @@ def main():
 
     # For the SNPpiest 200 exons, write output:
     # seq_id \t exon_start \t exon_end \t 'name'
-    # TODO idk what 'name' is supposed to be, maybe gene_name, or exon_id?
-
+    # TODO idk what 'name' is supposed to be, maybe gene_name, or exon_id? ## hi brian 'name' = gene_name 
+	
 
 ###########################################
 
