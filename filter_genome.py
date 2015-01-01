@@ -5,13 +5,14 @@ from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_cou
 from src.gene import Gene, read_genome
 
 def main():
-    genomefile, orthofile, snpfile = process_args(sys.argv)
-
+    genomefile, orthofile, snpfile = process_args(sys.argv)  
+   
     # Read in single copy ortholog info
     # TODO decide what exactly we need to store about orthologs;
     #  I'm thinking just the gene_id or gene_name? In a list?
     print("Reading ortholog info in file " + orthofile + "...")
     orthologs = read_orthologs(orthofile)
+    print(orthologs)
 
     # Read in SNP info
     # TODO decide what exactly we need to store about SNPs;

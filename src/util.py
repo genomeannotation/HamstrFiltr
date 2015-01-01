@@ -11,7 +11,14 @@ def process_args(args):
         return args[1], args[2], args[3]
 
 def read_orthologs(ofile):
-    pass
+    result = []
+    with open(ofile, "r") as ortho:
+        for line in ortho:
+            fields = line.strip().split("|")
+            #TODO not sure if the first column is what we need or not
+            ortho_id = fields[0] 
+            result.append(ortho_id)
+        return result
 
 def read_vcf(vfile):
     pass
