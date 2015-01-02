@@ -3,7 +3,10 @@
 import sys
 
 def read_genome(gfile):
-    pass
+    result = []
+    with open(gfile, "r") as gff:
+        for line in gff:
+            pass 
 
 class Gene:
 

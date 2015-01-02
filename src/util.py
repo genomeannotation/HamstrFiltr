@@ -21,7 +21,15 @@ def read_orthologs(ofile):
         return result
 
 def read_vcf(vfile):
-    pass
+    result = []
+    with open(vfile, "r") as vcf:
+        for line in vcf:
+            fields = line.strip().split()
+            seq_id = fields[0]
+            index = fields[1]
+            snps = (seq_id, index)
+            result.append(snps)
+        return result
 
 def update_gene_snp_count(gene, snps):
     pass

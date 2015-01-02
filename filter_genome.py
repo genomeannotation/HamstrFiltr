@@ -19,6 +19,7 @@ def main():
     #  I'm thinking just sequence and index
     print("Reading SNPs in file " + snpfile + "...")
     snps = read_vcf(snpfile)
+    print(snps)
 
     # Read gff
     # TODO decide what exactly we need to store about genes;
