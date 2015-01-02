@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_count
-from src.gene import Gene, read_genome
+from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_count, read_genome 
 
 def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)  

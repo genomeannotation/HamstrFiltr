@@ -30,5 +30,8 @@ def read_vcf(vfile):
             result.append(snps)
         return result
 
+def read_genome(gfile):
+    pass 
+
 def update_gene_snp_count(gene, snps):
     pass
