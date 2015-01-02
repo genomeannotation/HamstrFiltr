@@ -15,8 +15,7 @@ def read_orthologs(ofile):
     with open(ofile, "r") as ortho:
         for line in ortho:
             fields = line.strip().split("|")
-            #TODO not sure if the first column is what we need or not
-            ortho_id = fields[0] 
+            ortho_id = fields[3] 
             result.append(ortho_id)
         return result
 

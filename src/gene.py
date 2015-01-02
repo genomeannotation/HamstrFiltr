@@ -10,8 +10,8 @@ def read_genome(gfile):
 
 class Gene:
 
-    def __init__(self, seq_name, exons):
-        self.seq_name = seq_name
+    def __init__(self, gene_id, exons):
+        self.gene_id = gene_id 
         self.exons = exons
 
     def discard_all_but_longest_exon(self):
