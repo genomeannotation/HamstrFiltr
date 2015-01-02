@@ -44,6 +44,13 @@ def get_mrna_id(fields):
         if "Parent" in attr: 
             return attr.split("=")[1]
 
+def get_exon_id(fields):
+    attributes = fields[8]
+    split_attr = attributes.split(";")
+    for attr in split_attr:
+        if "ID" in attr: 
+            return attr.split("=")[1]
+
 def read_genome(gfile):
     result = {} 
     with open(gfile, "r") as gff:
@@ -56,9 +63,20 @@ def read_genome(gfile):
             exoncolumn = fields[2]
             if exoncolumn == "exon":     
                 length = length_of_feature(fields)
-                mrnaid = get_mrna_id(fields)
-                if length >= 400:
-                    print(mrnaid, length)
+                mrna_id = get_mrna_id(fields)
+                seq_id = fields[0]
+                start = fields[3]
+                stop = fields[4]
+                exon_id = get_exon_id(fields)
+                if length < 400:
+                    continue 
+                if mrna_id in result:
+                    length_from_dict = result[mrna_id][4]
+                    if length > length_from_dict:
+                        result[mrna_id] = (seq_id, start, stop, exon_id, length)
+                else:
+                    result[mrna_id] = (seq_id, start, stop, exon_id, length)
+    return result
 
 def update_gene_snp_count(gene, snps):
     pass

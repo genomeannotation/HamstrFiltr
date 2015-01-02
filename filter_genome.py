@@ -25,7 +25,8 @@ def main():
     #  I'm thinking just sequence, id/name, and a list of exon start/stops
     #  Maybe also the exons' ids/names -- will ask boss
     print("Reading gff file " + genomefile + "...")
-    genes = read_genome(genomefile)
+    exons = read_genome(genomefile)
+    print(exons)
 
     # Keep genes that are single copy orthologs
     # Will probably look like 
