@@ -12,6 +12,7 @@ def process_args(args):
         return args[1], args[2], args[3]
 
 def read_orthologs(ofile):
+    """Returns a list of mrna_ids for single-copy orthologous mRNAs"""
     result = []
     with open(ofile, "r") as ortho:
         for line in ortho:
@@ -21,6 +22,7 @@ def read_orthologs(ofile):
         return result
 
 def read_vcf(vfile):
+    """Returns list of (seq_id, index) tuples representing SNPs"""
     result = []
     with open(vfile, "r") as vcf:
         for line in vcf:
@@ -80,7 +82,7 @@ def read_genome(gfile):
     # Pack dictionary entries into a list of MRNA objects
     result = []
     for mrna_id, attr in mrna_dict.items():
-        mrna = MRNA(attr[0], attr[1], attr[2], attr[3], attr[4])
+        mrna = MRNA(mrna_id, attr[0], attr[1], attr[2], attr[3], attr[4])
         result.append(mrna)
     return result
 

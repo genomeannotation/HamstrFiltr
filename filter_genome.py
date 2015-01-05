@@ -6,11 +6,11 @@ from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_cou
 def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)  
 
-    # Read ortho file
+    # Read ortho file, return a list of single-copy orthologous mrna ids
     print("Reading ortholog info in file " + orthofile + "...")
     orthologs = read_orthologs(orthofile)
 
-    # Read vcf
+    # Read vcf, return list of (seq_id, index) tuples representing SNPs
     print("Reading SNPs in file " + snpfile + "...")
     snps = read_vcf(snpfile)
 
@@ -20,18 +20,15 @@ def main():
     print("found " + str(len(mrnas)) + " exons") 
 
     # Keep genes that are single copy orthologs
-    # Will probably look like 
-    #    genes = [g for g in genes if g.name in orthologs]
+    print("Total mRNAs in genome: " + str(len(mrnas)))
+    mrnas = [m for m in mrnas if m.mrna_id in orthologs]
+    print("Single copy orthologs: " + str(len(mrnas)))
 
-    # For each single copy ortholog gene, choose longest exon
-    # Could look like
-    #    for gene in genes:
-    #        gene.discard_all_but_longest_exon()
-    
-    # Keep genes whose longest exon (now their only exon) is >= 400bp
-    # Could look like
-    #    genes = [g for g in genes if g.exon_length() >= 400]
-
+    for mrna in mrnas:
+        for snp in snps:
+            print("looking at this snp: " + str(snp))
+            if snp[0] == mrna.seq_id:
+                print("comparing " + str(mrna) + " and " + str(snp))
     # For each exon, find out how many SNPs it contains
     # Could look like
     #    for gene in genes:

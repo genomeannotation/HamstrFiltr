@@ -2,7 +2,8 @@
 
 class MRNA:
 
-    def __init__(self, seq_id, exon_id, exon_start, exon_stop, exon_length):
+    def __init__(self, mrna_id, seq_id, exon_id, exon_start, exon_stop, exon_length):
+        self.mrna_id = mrna_id
         self.seq_id = seq_id
         self.exon_id = exon_id
         self.exon_start = exon_start
