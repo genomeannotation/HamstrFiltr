@@ -7,25 +7,25 @@ def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)  
 
     # Read ortho file, return a list of single-copy orthologous mrna ids
-    print("Reading ortholog info in file " + orthofile + "...")
+    sys.stderr.write("Reading ortholog info in file " + orthofile + "...\n")
     orthologs = read_orthologs(orthofile)
 
     # Read vcf, return dict of seq_id: [snp_indices]
-    print("Reading SNPs in file " + snpfile + "...")
+    sys.stderr.write("Reading SNPs in file " + snpfile + "...\n")
     snps = read_vcf(snpfile)
 
     # Read gff
-    print("Reading gff file " + genomefile + "...")
+    sys.stderr.write("Reading gff file " + genomefile + "...\n")
     mrnas = read_genome(genomefile)
-    print("found " + str(len(mrnas)) + " exons") 
+    sys.stderr.write("found " + str(len(mrnas)) + " exons\n") 
 
     # Keep genes that are single copy orthologs
-    print("Total mRNAs in genome: " + str(len(mrnas)))
+    sys.stderr.write("Total mRNAs in genome: " + str(len(mrnas)) + "\n")
     mrnas = [m for m in mrnas if m.mrna_id in orthologs]
-    print("Single copy orthologs: " + str(len(mrnas)))
+    sys.stderr.write("Single copy orthologs: " + str(len(mrnas)) + "\n")
 
     # Calculate number of SNPs on each mrna/exon
-    print("Counting number of SNPs on each exon; this could take a minute...")
+    sys.stderr.write("Counting number of SNPs on each exon; this could take a minute...\n")
     for mrna in mrnas:
         if mrna.seq_id not in snps:
             sys.stderr.write("No snps on " + mrna.seq_id + "...\n")
@@ -39,7 +39,7 @@ def main():
 
     # Print summary of results
     for mrna in mrnas:
-        print("mrna " + mrna.mrna_id + " has " + str(mrna.snp_count) + " snps.")
+        print("\t".join([mrna.seq_id, mrna.exon_start, mrna.exon_stop, mrna.mrna_id, str(mrna.snp_count)]))
 
     # For the SNPpiest 200 exons, write output:
     # seq_id \t exon_start \t exon_end \t 'name'
