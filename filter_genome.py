@@ -10,7 +10,7 @@ def main():
     print("Reading ortholog info in file " + orthofile + "...")
     orthologs = read_orthologs(orthofile)
 
-    # Read vcf, return list of (seq_id, index) tuples representing SNPs
+    # Read vcf, return dict of seq_id: [snp_indices]
     print("Reading SNPs in file " + snpfile + "...")
     snps = read_vcf(snpfile)
 
@@ -24,15 +24,18 @@ def main():
     mrnas = [m for m in mrnas if m.mrna_id in orthologs]
     print("Single copy orthologs: " + str(len(mrnas)))
 
+    # Calculate number of SNPs on each mrna/exon
     for mrna in mrnas:
-        for snp in snps:
-            print("looking at this snp: " + str(snp))
-            if snp[0] == mrna.seq_id:
-                print("comparing " + str(mrna) + " and " + str(snp))
-    # For each exon, find out how many SNPs it contains
-    # Could look like
-    #    for gene in genes:
-    #        update_gene_snp_count(gene, snps)
+        if mrna.seq_id not in snps:
+            sys.stderr.write("No snps on " + mrna.seq_id + "...\n")
+            continue
+        for snp_index in snps[mrna.seq_id]:
+            if mrna.contains_index(snp_index):
+                mrna.snp_count += 1
+
+    # Print summary of results
+    for mrna in mrnas:
+        print("mrna " + mrna.mrna_id + " has " + str(mrna.snp_count) + " snps.")
 
     # Rank exons in descending order based on SNP count
     # There's some clever one-liner way to do this; ask me and I'll look it up

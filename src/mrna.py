@@ -14,3 +14,13 @@ class MRNA:
     def __str__(self):
         return ", ".join([self.mrna_id, self.seq_id, self.exon_id, self.exon_start,
                 self.exon_stop, str(self.exon_length), str(self.snp_count)])
+
+    def contains_index(self, index):
+        index = int(index)
+        start = int(self.exon_start)
+        stop = int(self.exon_stop)
+        if start <= index and stop >= index:
+            return True
+        else:
+            return False
+

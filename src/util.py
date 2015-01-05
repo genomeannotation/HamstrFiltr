@@ -22,8 +22,8 @@ def read_orthologs(ofile):
         return result
 
 def read_vcf(vfile):
-    """Returns list of (seq_id, index) tuples representing SNPs"""
-    result = []
+    """Return dict of seq_id: [snp_indices]"""
+    result = {}
     with open(vfile, "r") as vcf:
         for line in vcf:
             if line.startswith("#"):
@@ -31,8 +31,10 @@ def read_vcf(vfile):
             fields = line.strip().split()
             seq_id = fields[0]
             index = fields[1]
-            snps = (seq_id, index)
-            result.append(snps)
+            if seq_id in result:
+                result[seq_id].append(index)
+            else:
+                result[seq_id] = [index]
         return result
 
 def length_of_feature(items):
