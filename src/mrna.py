@@ -10,3 +10,7 @@ class MRNA:
         self.exon_stop = exon_stop
         self.exon_length = exon_length
         self.snp_count = 0
+
+    def __str__(self):
+        return ", ".join([self.mrna_id, self.seq_id, self.exon_id, self.exon_start,
+                self.exon_stop, str(self.exon_length), str(self.snp_count)])
