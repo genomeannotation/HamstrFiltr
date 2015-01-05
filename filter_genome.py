@@ -5,25 +5,19 @@ from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_cou
 
 def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)  
-   
-    # Read in single copy ortholog info
-    # TODO decide what exactly we need to store about orthologs;
-    #  I'm thinking just the gene_id or gene_name? In a list?
+
+    # Read ortho file
     print("Reading ortholog info in file " + orthofile + "...")
     orthologs = read_orthologs(orthofile)
 
-    # TODO decide what exactly we need to store about SNPs;
-    #  I'm thinking just sequence and index
+    # Read vcf
     print("Reading SNPs in file " + snpfile + "...")
     snps = read_vcf(snpfile)
 
     # Read gff
-    # TODO decide what exactly we need to store about genes;
-    #  I'm thinking just sequence, id/name, and a list of exon start/stops
-    #  Maybe also the exons' ids/names -- will ask boss
     print("Reading gff file " + genomefile + "...")
-    exons = read_genome(genomefile)
-    print("found " + str(len(exons)) + " exons") 
+    mrnas = read_genome(genomefile)
+    print("found " + str(len(mrnas)) + " exons") 
 
     # Keep genes that are single copy orthologs
     # Will probably look like 

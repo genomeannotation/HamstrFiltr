@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+from src.mrna import MRNA
 
 def process_args(args):
     if len(args) != 4:
@@ -52,7 +53,7 @@ def get_exon_id(fields):
             return attr.split("=")[1]
 
 def read_genome(gfile):
-    result = {} 
+    mrna_dict = {} 
     with open(gfile, "r") as gff:
         for line in gff: 
             if line.startswith("#"):
@@ -70,12 +71,17 @@ def read_genome(gfile):
                 exon_id = get_exon_id(fields)
                 if length < 400:
                     continue 
-                if mrna_id in result:
-                    length_from_dict = result[mrna_id][4]
+                if mrna_id in mrna_dict:
+                    length_from_dict = mrna_dict[mrna_id][4]
                     if length > length_from_dict:
-                        result[mrna_id] = (seq_id, start, stop, exon_id, length)
+                        mrna_dict[mrna_id] = (seq_id, exon_id, start, stop, length)
                 else:
-                    result[mrna_id] = (seq_id, start, stop, exon_id, length)
+                    mrna_dict[mrna_id] = (seq_id, exon_id, start, stop, length)
+    # Pack dictionary entries into a list of MRNA objects
+    result = []
+    for mrna_id, attr in mrna_dict.items():
+        mrna = MRNA(attr[0], attr[1], attr[2], attr[3], attr[4])
+        result.append(mrna)
     return result
 
 def update_gene_snp_count(gene, snps):
