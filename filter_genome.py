@@ -25,6 +25,7 @@ def main():
     print("Single copy orthologs: " + str(len(mrnas)))
 
     # Calculate number of SNPs on each mrna/exon
+    print("Counting number of SNPs on each exon; this could take a minute...")
     for mrna in mrnas:
         if mrna.seq_id not in snps:
             sys.stderr.write("No snps on " + mrna.seq_id + "...\n")
@@ -33,12 +34,12 @@ def main():
             if mrna.contains_index(snp_index):
                 mrna.snp_count += 1
 
+    # Rank exons in descending order based on SNP count
+    mrnas = sorted(mrnas, key=lambda x: x.snp_count, reverse=True)
+
     # Print summary of results
     for mrna in mrnas:
         print("mrna " + mrna.mrna_id + " has " + str(mrna.snp_count) + " snps.")
-
-    # Rank exons in descending order based on SNP count
-    # There's some clever one-liner way to do this; ask me and I'll look it up
 
     # For the SNPpiest 200 exons, write output:
     # seq_id \t exon_start \t exon_end \t 'name'
