@@ -38,11 +38,12 @@ def main():
 
     # Print summary of results
     print("\t".join(["seq_id", "exon_start", "exon_end", "exon_id",
-                     "snp_count", "dmel_ortholog_id"]))
+                     "snp_count", "snp_density", "dmel_ortholog_id"]))
     for mrna in mrnas:
         dmel_id = orthologs[mrna.mrna_id]
+        snp_density = float(mrna.snp_count) / mrna.exon_length
         print("\t".join([mrna.seq_id, mrna.exon_start, mrna.exon_stop, 
-            mrna.exon_id, str(mrna.snp_count), dmel_id]))
+            mrna.exon_id, str(mrna.snp_count), str(snp_density), dmel_id]))
 
 
 ###########################################

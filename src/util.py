@@ -43,23 +43,39 @@ def length_of_feature(items):
     end = int(items[4]) 
     return end - start + 1 
 
-def get_mrna_id(fields):
+def get_parent_id(fields):
     attributes = fields[8]
     split_attr = attributes.split(";")
     for attr in split_attr:
         if "Parent" in attr: 
             return attr.split("=")[1]
 
-def get_exon_id(fields):
+def get_id(fields):
     attributes = fields[8]
     split_attr = attributes.split(";")
     for attr in split_attr:
         if "ID" in attr: 
             return attr.split("=")[1]
 
+def first_or_last_exon(mrna_dict, mrna_id, start, stop):
+    mrna_start_stop = mrna_dict[mrna_id]
+    mrna_start = mrna_start_stop[0]
+    mrna_stop = mrna_start_stop[1]
+    if start == mrna_start or stop == mrna_stop:
+        return True
+    else:
+        return False
+
 def read_genome(gfile):
+    # Count genes so we know how many we lose to the "must contain exon
+    #  longer than 400bp" constraint
     total_genes = 0
-    mrna_dict = {} 
+    # Store a dict that maps mrna_ids to tuples containing 
+    #  seq id, exon id, exon start, exon stop and exon length
+    mrna_to_exon_tuple = {} 
+    # Also store a dict to track mrna starts and stops so we can
+    #  determine if exons are the first/last exon on the gene
+    mrna_to_start_stop = {}
     with open(gfile, "r") as gff:
         for line in gff: 
             if line.startswith("#"):
@@ -70,28 +86,37 @@ def read_genome(gfile):
             feature_type = fields[2]
             if feature_type == "gene":
                 total_genes += 1
-            if feature_type == "exon":     
+            elif feature_type == "mRNA":
+                mrna_id = get_id(fields)
+                start = fields[3]
+                stop = fields[4]
+                mrna_to_start_stop[mrna_id] = (start, stop)
+            elif feature_type == "exon":     
                 length = length_of_feature(fields)
-                mrna_id = get_mrna_id(fields)
+                mrna_id = get_parent_id(fields)
                 seq_id = fields[0]
                 start = fields[3]
                 stop = fields[4]
-                exon_id = get_exon_id(fields)
+                exon_id = get_id(fields)
                 if length < 400:
                     continue 
-                if mrna_id in mrna_dict:
-                    length_from_dict = mrna_dict[mrna_id][4]
+                elif first_or_last_exon(mrna_to_start_stop, mrna_id, start, stop):
+                    continue
+                if mrna_id in mrna_to_exon_tuple:
+                    length_from_dict = mrna_to_exon_tuple[mrna_id][4]
                     if length > length_from_dict:
-                        mrna_dict[mrna_id] = (seq_id, exon_id, start, stop, length)
+                        mrna_to_exon_tuple[mrna_id] =\
+                                (seq_id, exon_id, start, stop, length)
                 else:
-                    mrna_dict[mrna_id] = (seq_id, exon_id, start, stop, length)
+                    mrna_to_exon_tuple[mrna_id] =\
+                            (seq_id, exon_id, start, stop, length)
     # Pack dictionary entries into a list of MRNA objects
     result = []
-    for mrna_id, attr in mrna_dict.items():
+    for mrna_id, attr in mrna_to_exon_tuple.items():
         mrna = MRNA(mrna_id, attr[0], attr[1], attr[2], attr[3], attr[4])
         result.append(mrna)
     sys.stderr.write("Total genes in genome: " + str(total_genes) + "\n")
-    sys.stderr.write("Genes with at least one exon > 400bp long: " + 
+    sys.stderr.write("Genes with at least one internal exon > 400bp long: " + 
             str(len(result)) + "\n")
     return result
 
