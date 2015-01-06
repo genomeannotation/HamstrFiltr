@@ -6,7 +6,8 @@ from src.util import process_args, read_orthologs, read_vcf, update_gene_snp_cou
 def main():
     genomefile, orthofile, snpfile = process_args(sys.argv)  
 
-    # Read ortho file, return a list of single-copy orthologous mrna ids
+    # Read ortho file, return a dictionary mapping bdor mrna_ids 
+    #  to dmel mrna_ids
     sys.stderr.write("Reading ortholog info in file " + orthofile + "...\n")
     orthologs = read_orthologs(orthofile)
 
@@ -38,8 +39,12 @@ def main():
     mrnas = sorted(mrnas, key=lambda x: x.snp_count, reverse=True)
 
     # Print summary of results
+    print("\t".join(["seq_id", "exon_start", "exon_end", "exon_id",
+                     "snp_count", "dmel_ortholog_id"]))
     for mrna in mrnas:
-        print("\t".join([mrna.seq_id, mrna.exon_start, mrna.exon_stop, mrna.mrna_id, str(mrna.snp_count)]))
+        dmel_id = orthologs[mrna.mrna_id]
+        print("\t".join([mrna.seq_id, mrna.exon_start, mrna.exon_stop, 
+            mrna.exon_id, str(mrna.snp_count), dmel_id]))
 
     # For the SNPpiest 200 exons, write output:
     # seq_id \t exon_start \t exon_end \t 'name'

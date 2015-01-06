@@ -12,13 +12,14 @@ def process_args(args):
         return args[1], args[2], args[3]
 
 def read_orthologs(ofile):
-    """Returns a list of mrna_ids for single-copy orthologous mRNAs"""
-    result = []
+    """Returns a list of bdor, dmel mrna_id tuples for single-copy orthologous mRNAs"""
+    result = {}
     with open(ofile, "r") as ortho:
         for line in ortho:
             fields = line.strip().split("|")
-            ortho_id = fields[3] 
-            result.append(ortho_id)
+            dmel_id = fields[0]
+            bdor_id = fields[3] 
+            result[bdor_id] = dmel_id
         return result
 
 def read_vcf(vfile):
