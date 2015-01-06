@@ -16,17 +16,15 @@ def main():
     snps = read_vcf(snpfile)
 
     # Read gff
-    sys.stderr.write("Reading gff file " + genomefile + "...\n")
+    sys.stderr.write("Reading gff file " + genomefile + "...\n\n")
     mrnas = read_genome(genomefile)
-    sys.stderr.write("found " + str(len(mrnas)) + " exons\n") 
 
     # Keep genes that are single copy orthologs
-    sys.stderr.write("Total mRNAs in genome: " + str(len(mrnas)) + "\n")
     mrnas = [m for m in mrnas if m.mrna_id in orthologs]
     sys.stderr.write("Single copy orthologs: " + str(len(mrnas)) + "\n")
 
     # Calculate number of SNPs on each mrna/exon
-    sys.stderr.write("Counting number of SNPs on each exon; this could take a minute...\n")
+    sys.stderr.write("\nCounting number of SNPs on each exon; this could take a minute...\n\n")
     for mrna in mrnas:
         if mrna.seq_id not in snps:
             sys.stderr.write("No snps on " + mrna.seq_id + "...\n")
@@ -46,10 +44,6 @@ def main():
         print("\t".join([mrna.seq_id, mrna.exon_start, mrna.exon_stop, 
             mrna.exon_id, str(mrna.snp_count), dmel_id]))
 
-    # For the SNPpiest 200 exons, write output:
-    # seq_id \t exon_start \t exon_end \t 'name'
-    # TODO idk what 'name' is supposed to be, maybe gene_name, or exon_id? ## hi brian 'name' = gene_name 
-	
 
 ###########################################
 

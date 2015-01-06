@@ -58,6 +58,7 @@ def get_exon_id(fields):
             return attr.split("=")[1]
 
 def read_genome(gfile):
+    total_genes = 0
     mrna_dict = {} 
     with open(gfile, "r") as gff:
         for line in gff: 
@@ -66,8 +67,10 @@ def read_genome(gfile):
             fields = line.strip().split()
             if len(fields) != 9:
                 continue 
-            exoncolumn = fields[2]
-            if exoncolumn == "exon":     
+            feature_type = fields[2]
+            if feature_type == "gene":
+                total_genes += 1
+            if feature_type == "exon":     
                 length = length_of_feature(fields)
                 mrna_id = get_mrna_id(fields)
                 seq_id = fields[0]
@@ -87,6 +90,9 @@ def read_genome(gfile):
     for mrna_id, attr in mrna_dict.items():
         mrna = MRNA(mrna_id, attr[0], attr[1], attr[2], attr[3], attr[4])
         result.append(mrna)
+    sys.stderr.write("Total genes in genome: " + str(total_genes) + "\n")
+    sys.stderr.write("Genes with at least one exon > 400bp long: " + 
+            str(len(result)) + "\n")
     return result
 
 def update_gene_snp_count(gene, snps):
