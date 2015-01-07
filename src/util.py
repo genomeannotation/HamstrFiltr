@@ -4,12 +4,12 @@ import sys
 from src.mrna import MRNA
 
 def process_args(args):
-    if len(args) != 4:
+    if len(args) != 5:
         sys.stderr.write("usage: filter_genome.py <genome.gff> <orthologs.out> "
-                         "<snps.vcf>\n")
+                         "<snps.vcf> <output prefix>\n")
         sys.exit()
     else:
-        return args[1], args[2], args[3]
+        return args[1], args[2], args[3], args[4]
 
 def read_orthologs(ofile):
     """Returns a list of bdor, dmel mrna_id tuples for single-copy orthologous mRNAs"""
@@ -115,10 +115,10 @@ def read_genome(gfile):
     for mrna_id, attr in mrna_to_exon_tuple.items():
         mrna = MRNA(mrna_id, attr[0], attr[1], attr[2], attr[3], attr[4])
         result.append(mrna)
-    sys.stderr.write("Total genes in genome: " + str(total_genes) + "\n")
-    sys.stderr.write("Genes with at least one internal exon > 400bp long: " + 
-            str(len(result)) + "\n")
-    return result
+    stats = "Total genes in genome: " + str(total_genes) + "\n"
+    stats += "Genes with at least one internal exon > 400bp long: " +\
+            str(len(result)) + "\n"
+    return result, stats
 
 def update_gene_snp_count(gene, snps):
     pass
